@@ -7,8 +7,8 @@ import argparse
     
 """
 def main():
-    # handel the CML and according to the returned option call either music or vido func
-    args = clm()
+    # handel the CLI and according to the returned option call either music or vido func
+    args = cli()
     if args["music"]:
         music()
     else:
@@ -118,8 +118,8 @@ def video():
     print("the file has been downloaded sucssfully")
 
 
-def clm():
-    """TODO handel the CLM args get the option [-m|--music] | [-v|--video]
+def cli():
+    """TODO handel the cli args get the option [-m|--music] | [-v|--video]
     then return the option"""
     parser = argparse.ArgumentParser(description="download music or video from youtube")
     group = parser.add_mutually_exclusive_group()
