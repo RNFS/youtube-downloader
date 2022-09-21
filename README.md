@@ -13,4 +13,4 @@
   -v, --video  download file in a video format
   
  - still we need to add the following future
-    and option path [-p] for the path by default in the same bath
+    option path [-p] for the path,  by default in the same path
