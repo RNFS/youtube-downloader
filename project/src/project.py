@@ -6,6 +6,8 @@ import argparse
 """
     TODO we need to allow the user to choose the folder to store the data in
 """
+
+
 def main():
     # handel the CLI and according to the returned option call either music or vido func
     args = clm()
@@ -16,17 +18,17 @@ def main():
 
 
 def option(data, type="video"):
-    """ return a list of the available options and according to the given data, 
-    take the input from the user acordding to the printed data, 
+    """return a list of the available options and according to the given data,
+    take the input from the user acordding to the printed data,
     and consider the input as the itag for the quality
     for either the muisc func or the verdio fun
     - only supprted format utill now is Mb4"""
-    
+
     options = {}
     l_options = []
     for i in data:
         # for music search for the itag and the abr num which like p for vidoes for the quality
-        if type == "audio": 
+        if type == "audio":
             matches = re.search(
                 r"^.* itag=\"(\d+).* mime_type=\"audio/mp4\" abr=\"(\d+).*$",
                 f"{i}",
@@ -45,12 +47,12 @@ def option(data, type="video"):
             # we need to recreat another dict because we can't override the values data because they are str\
             # str, int, floot, tuple and so on are immutable
             l_options.append(options)
-        
+
         options = {}
 
     if not l_options:
         raise ValueError("couldn't find matching patter for the options")
-    
+
     # after storing the matched data render it to the user so they can choose one tag which is equivalent to itag
     tags = []
     print(f"choose one tag for the desired quality")
@@ -64,8 +66,8 @@ def option(data, type="video"):
         print(f"choose {i['itag']} for {i['qu']}{q}")
 
     itag = input("Tag: ")
-    
-    # if input is not in the renderd data then exit with an error message 
+
+    # if input is not in the renderd data then exit with an error message
     if not itag in tags:
         sys.exit("Invalid choise")
     # if everthing went good then return the itag which will be used to download the file
@@ -74,7 +76,7 @@ def option(data, type="video"):
 
 # download muisc only
 def music():
-    # get the data of that file  
+    # get the data of that file
     try:
         if url := input("URL: ").strip():
             pass
@@ -94,7 +96,7 @@ def music():
         # download the music file with the choosen itag and save it in the music folder
         stream = yt.streams.get_by_itag(itag)
         stream.download("./music/")
-    
+
     except:
         # TODO we nedd to parse the exceptions and hundel them individually
         sys.exit("couldn't download this file")
@@ -104,7 +106,7 @@ def music():
 
 # download  video only
 def video():
-    # get the data of that file  
+    # get the data of that file
     try:
         if url := input("URL: ").strip():
             pass
@@ -114,10 +116,10 @@ def video():
         yt = YouTube(url)
 
         data = yt.streams.filter(progressive=True)
-         
+
         # option will render the avai options so the user can choose one of them and then returns it's itag
         itag = int(option(data, type="video"))
-        
+
         # download the video with the choosen itag and save it in the videos folder
         stream = yt.streams.get_by_itag(itag)
         stream.download("./videos/")
@@ -150,7 +152,7 @@ def clm():
     else:
         option["video"] = True
         option["music"] = False
-    
+
     return option
 
 
