@@ -1,0 +1,5 @@
+- that  will be a command line arguemnt programm that download from youtube 
+- either a vedio or music according to the url that will be given by the user and the options
+- [ -V |--vedio]  | -M | --music or -h --help 
+- and option path [-p] for the path by default in the same bath
+- usage python3 project.py url [-V|--vedio, -M, --music] [-p path]
