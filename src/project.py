@@ -9,10 +9,10 @@ import argparse
 
 
 def main():
-    # handel the CLI and according to the returned option call either music or vido func
-    args = clm()
-    if args["music"]:
-        music()
+    # handel the CLI and according to the returned option call either voice or vido func
+    args = cli()
+    if args["voice"]:
+        voice()
     else:
         video()
 
@@ -27,7 +27,7 @@ def option(data, type="video"):
     options = {}
     l_options = []
     for i in data:
-        # for music search for the itag and the abr num which like p for vidoes for the quality
+        # for voice search for the itag and the abr num which like p for vidoes for the quality
         if type == "audio":
             matches = re.search(
                 r"^.* itag=\"(\d+).* mime_type=\"audio/mp4\" abr=\"(\d+).*$",
@@ -56,7 +56,7 @@ def option(data, type="video"):
     # after storing the matched data render it to the user so they can choose one tag which is equivalent to itag
     tags = []
     print(f"choose one tag for the desired quality")
-    # pixels for video and kilobyte per second for music quality
+    # pixels for video and kilobyte per second for voice quality
     q = "p"
     if type == "audio":
         q = "kbps"
@@ -66,7 +66,7 @@ def option(data, type="video"):
         print(f"choose {i['itag']} for {i['qu']}{q}")
 
     itag = input("Tag: ")
-
+    print("...")
     # if input is not in the renderd data then exit with an error message
     if not itag in tags:
         sys.exit("Invalid choise")
@@ -75,7 +75,7 @@ def option(data, type="video"):
 
 
 # download muisc only
-def music():
+def voice():
     # get the data of that file
     try:
         if url := input("URL: ").strip():
@@ -86,16 +86,12 @@ def music():
         yt = YouTube(url)
         data = yt.streams.filter(only_audio=True)
 
-        # with open("filter.csv", "w") as file:
-        #     for line in data:
-        #         file.write(f"{line}\n")
-
         # option will render the avai options itags so the user can choose one of them and then returns it's itag
         itag = int(option(data, type="audio"))
 
-        # download the music file with the choosen itag and save it in the music folder
+        # download the voice file with the choosen itag and save it in the voice folder
         stream = yt.streams.get_by_itag(itag)
-        stream.download("./music/")
+        stream.download("./voice/")
 
     except:
         # TODO we nedd to parse the exceptions and hundel them individually
@@ -131,13 +127,13 @@ def video():
     print("the file has been downloaded sucssfully")
 
 
-def clm():
-    """TODO handel the CLI args get the option [-m | --music] | [-v|--video]
+def cli():
+    """TODO handel the CLI args get the option [-m | --voice] | [-v|--video]
     then return the option"""
-    parser = argparse.ArgumentParser(description="download music or video from youtube")
+    parser = argparse.ArgumentParser(description="download a voice or a video file from youtube")
     group = parser.add_mutually_exclusive_group()
     group.add_argument(
-        "-m", "--music", action="store_true", help="download file in a muisc formate"
+        "-m", "--voice", action="store_true", help="download file in a muisc formate"
     )
     group.add_argument(
         "-v", "--video", action="store_true", help="download file in a video format"
@@ -145,13 +141,13 @@ def clm():
 
     args = parser.parse_args()
     option = {}
-    if args.music:
-        option["music"] = True
+    if args.voice:
+        option["voice"] = True
         option["video"] = False
-    # default format is video if music is not specifed
+    # default format is video if voice is not specifed
     else:
         option["video"] = True
-        option["music"] = False
+        option["voice"] = False
 
     return option
 
