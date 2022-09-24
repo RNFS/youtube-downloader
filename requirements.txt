@@ -1,4 +1,3 @@
-import re
+pip install pytest
 pip install pytube 
-import sys
 pip install argparse
