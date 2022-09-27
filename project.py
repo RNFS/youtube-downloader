@@ -28,6 +28,7 @@ def option(data, type="video"):
 
     options = {}
     l_options = []
+    num = 1
     
     # get all the mb4 options and store them in a the option dict
     for i in data:
@@ -48,7 +49,9 @@ def option(data, type="video"):
 
         # if there are matches then add store them as a list of dicts 
         if matches:
-            options["itag"], options["qu"] = matches.groups()        
+            options["itag"], options["qu"] = matches.groups()
+            options["num"] =  num
+            num += 1      
             l_options.append(options)
         
         # we need to recreat another dict because we can't override the values data because they are str\
@@ -59,6 +62,7 @@ def option(data, type="video"):
 
 
 def get_tag(l_options):
+    print(l_options)
     # the tag is what we will use to choose the deiserd qualty from the data the we get from Youtube
     if not l_options:
         raise ValueError("couldn't find matching patter for the options")
