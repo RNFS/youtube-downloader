@@ -61,8 +61,7 @@ def option(data, type_="video"):
     return {"l_options": l_options, "type_": type_}
 
 
-
-# this func to render the options to the user so he can choose an option
+# this func to render the options to the user so he can choose an option and then return the choosed tag
 # get the list of options and the type of the file and a num equivalent to the itag number, as a dict
 def get_tag(dict):
     l_options = dict["l_options"]
