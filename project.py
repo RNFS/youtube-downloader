@@ -28,15 +28,17 @@ def option(data, type="video"):
 
     options = {}
     l_options = []
+    
+    # get all the mb4 options and store them in a the option dict
     for i in data:
-        # for music search for the itag and the abr num which like p for vidoes for the quality
+        # for music search for the itag and the abr value e.g abr=140kbps which like p for vidoes for the quality
         if type == "audio":
             matches = re.search(
                 r"^.* itag=\"(\d+).* mime_type=\"audio/mp4\" abr=\"(\d+).*$",
                 f"{i}",
                 re.IGNORECASE,
             )
-        # if a vedio which is the default value for type , search for the itag and the res num
+        # if a vedio which is the default value for type , search for the itag and the res e.g res=720p num
         else:
             matches = re.search(
                 r"^.* itag=\"(\d+).* mime_type=\"video/mp4\" res=\"(\d+).*$",
@@ -44,25 +46,34 @@ def option(data, type="video"):
                 re.IGNORECASE,
             )
 
+        # if there are matches then add store them as a list of dicts 
         if matches:
-            options["itag"], options["qu"] = matches.groups()
-            # we need to recreat another dict because we can't override the values data because they are str\
-            # str, int, floot, tuple and so on are immutable
+            options["itag"], options["qu"] = matches.groups()        
             l_options.append(options)
-
+        
+        # we need to recreat another dict because we can't override the values data because they are str\
+        # str, int, floot, tuple and so on are immutable
         options = {}
+    
+    return l_options 
 
+
+def get_tag(l_options):
+    # the tag is what we will use to choose the deiserd qualty from the data the we get from Youtube
     if not l_options:
         raise ValueError("couldn't find matching patter for the options")
 
-    # after storing the matched data render it to the user so they can choose one tag which is equivalent to itag
+    """ after getting avai tags render it to the user so they can choose one tag which is 
+    equivalent to itag for the qualty of the file  """
+    
     tags = []
     print(f"choose one tag for the desired quality")
+    
     # pixels for video and kilobyte per second for music quality
     q = "p"
     if type == "audio":
         q = "kbps"
-
+    
     for i in l_options:
         tags.append(i["itag"])
         print(f"choose {i['itag']} for {i['qu']}{q}")
@@ -89,7 +100,7 @@ def music(url=None):
         data = yt.streams.filter(only_audio=True)
 
         # option will render the avai options itags so the user can choose one of them and then returns it's itag
-        itag = int(option(data, type="audio"))
+        itag = int(get_tag(option(data, type="audio")))
 
         # download the music file with the choosen itag and save it in the music folder
         stream = yt.streams.get_by_itag(itag)
@@ -116,7 +127,7 @@ def video(url=None):
         data = yt.streams.filter(progressive=True)
 
         # option will render the avai options so the user can choose one of them and then returns it's itag
-        itag = int(option(data, type="video"))
+        itag = int(get_tag(option(data, type="video")))
 
         # download the video with the choosen itag and save it in the videos folder
         stream = yt.streams.get_by_itag(itag)
@@ -153,8 +164,8 @@ def cli(argv=None):
         option["video"] = False
     # default format is video if music is not specifed
     else:
-        option["video"] = True
         option["music"] = False
+        option["video"] = True
 
     return option
 
