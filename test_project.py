@@ -7,13 +7,27 @@ def test_cli():
     assert cli("-v") == {'music': False, 'video': True}
     assert cli("--video") == {'music': False, 'video': True}
 
+def test_option():
+    ...
+    # TODO
 
 def test_get_tag():
-    dict = {
-        "l_options":[{'itag': '139', 'qu': '48', 'num': 1}, {'itag': '140', 'qu': '128', 'num': 2}],
-        "type_":"audio"
-        }
-    assert get_tag(dict) ==  "140"
+    ...
+    # TODO
+
+def test_muisc():
+    ...
+    # TODO
+
+def test_video():
+    ...
+    # TODO
+# def test_get_tag():
+#     dict = {
+#         "l_options":[{'itag': '139', 'qu': '48', 'num': 1}, {'itag': '140', 'qu': '128', 'num': 2}],
+#         "type_":"audio"
+#         }
+#     assert get_tag(dict) ==  "140"
 
 
 # def test_option():
