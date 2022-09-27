@@ -12,14 +12,13 @@ import argparse
 def main():
     # handel the CLI and according to the returned option call either music or vido func
     args = cli()
-    print(args)
     if args["music"]:
         print(music())
     else:
         print(video())
 
 
-def option(data, type="video"):
+def option(data, type_="video"):
     """return a list of the available options and according to the given data,
     take the input from the user acordding to the printed data,
     and consider the input as the itag for the quality
@@ -33,7 +32,7 @@ def option(data, type="video"):
     # get all the mb4 options and store them in a the option dict
     for i in data:
         # for music search for the itag and the abr value e.g abr=140kbps which like p for vidoes for the quality
-        if type == "audio":
+        if type_ == "audio":
             matches = re.search(
                 r"^.* itag=\"(\d+).* mime_type=\"audio/mp4\" abr=\"(\d+).*$",
                 f"{i}",
@@ -50,6 +49,7 @@ def option(data, type="video"):
         # if there are matches then add store them as a list of dicts 
         if matches:
             options["itag"], options["qu"] = matches.groups()
+            # we will use this number to render it to the user so they can choose it as the tag number to be clear
             options["num"] =  num
             num += 1      
             l_options.append(options)
@@ -58,35 +58,50 @@ def option(data, type="video"):
         # str, int, floot, tuple and so on are immutable
         options = {}
     
-    return l_options 
+    return {"l_options":l_options, "type_": type_} 
 
 
-def get_tag(l_options):
-    print(l_options)
+# get the list of options and the type of the file and a num equivalent to the itag number as a dict
+def get_tag(dict):
+    l_options = dict["l_options"]
+    type_ = dict["type_"] 
+
     # the tag is what we will use to choose the deiserd qualty from the data the we get from Youtube
+    # we will use get_by_itag object to choose the deiserd qualty
+    
     if not l_options:
         raise ValueError("couldn't find matching patter for the options")
 
-    """ after getting avai tags render it to the user so they can choose one tag which is 
+    """ after getting avai tags render it to the user so they can choose one choice which is 
     equivalent to itag for the qualty of the file  """
     
     tags = []
-    print(f"choose one tag for the desired quality")
+    print(f"choose one the following Choices for the desired quality")
     
     # pixels for video and kilobyte per second for music quality
     q = "p"
-    if type == "audio":
+    if type_ == "audio":
         q = "kbps"
     
     for i in l_options:
-        tags.append(i["itag"])
-        print(f"choose {i['itag']} for {i['qu']}{q}")
+        tags.append(i["num"])
+        print(f"Choose: {i['num']}, for {i['qu']}{q}")
 
-    itag = input("Tag: ")
-    print("...")
+    try:
+        itag = int(input("Choice: "))
+    except ValueError:
+        print("Invalid Choise")
+        sys.exit()
+    
     # if input is not in the renderd data then exit with an error message
     if not itag in tags:
-        sys.exit("Invalid choise")
+        print("Invalid Choise")
+        sys.exit("Invalid choise !!")
+    # l_options is list of dicts each dict has index itag = the index for that dict
+    # which is the num inside that dict
+    
+    itag = l_options[itag-1]["itag"]
+
     # if everthing went good then return the itag which will be used to download the file
     return itag
 
@@ -100,12 +115,14 @@ def music(url=None):
         else:
             sys.exit("invalid url")
 
+        print("Please wait ....")
         yt = YouTube(url)
         data = yt.streams.filter(only_audio=True)
 
         # option will render the avai options itags so the user can choose one of them and then returns it's itag
-        itag = int(get_tag(option(data, type="audio")))
-
+        itag = int(get_tag(option(data, type_="audio")))
+        print("Please wait ....")
+        
         # download the music file with the choosen itag and save it in the music folder
         stream = yt.streams.get_by_itag(itag)
         stream.download("./music/")
@@ -126,14 +143,17 @@ def video(url=None):
         else:
             sys.exit("Invaild url")
 
+        print("Please wait ....")
+        
         yt = YouTube(url)
-
         data = yt.streams.filter(progressive=True)
 
         # option will render the avai options so the user can choose one of them and then returns it's itag
-        itag = int(get_tag(option(data, type="video")))
-
+        itag = int(get_tag(option(data, type_="video")))
+        print("Please wait ....")
+        
         # download the video with the choosen itag and save it in the videos folder
+
         stream = yt.streams.get_by_itag(itag)
         stream.download("./videos/")
 
@@ -153,6 +173,7 @@ def cli(argv=None):
     then return the option"""
 
     parser = argparse.ArgumentParser(description="download a music or a video file from youtube")
+    # parser.add_argument("-s", help="for test with pytest")
     group = parser.add_mutually_exclusive_group()
     group.add_argument(
         "-m", "--music", action="store_true", help="download file in a muisc formate"
