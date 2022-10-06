@@ -12,5 +12,6 @@
   -m, --music  download file in a muisc formate
   -v, --video  download file in a video format
   
- - still we need to add the following future
+ - TODO we need to add the following future
     option path [-p] for the path,  by default in the same path
+- TODO  we need to add an option to download higher quality for video files
