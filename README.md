@@ -1,5 +1,5 @@
 # youtube-downloader
-#### Video Demo: https://youtu.be/wTxLl_gFc2c 
+#### Video Demo: [youtube-downloader](https://youtu.be/wTxLl_gFc2c)   
 ### Description: - this a command line tool to download music or video files from YouTube 
 - user can download either a video or a music file, 
   according to the URL that will be given by the user and the   command line option
