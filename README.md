@@ -21,13 +21,14 @@
   and we have secondary files which are requirements.txt and README.md
 ## project.py 
   this file has the source code of the project, I have implemented in this file only functions 
-  I didn't use any classes, and it imports two third-party libraries 
+  I didn't implemented any classes, and it imports two third-party libraries 
 * pytube
 * argparse
-  and two built-in libraries 
+  __and two built-in libraries__ 
 * re
 * import sys
-  in this file we have 5 functions 
+
+ __in this file we have 5 functions__ 
 * __main__: which just calls the right function for downloading either a video or audio file 
 * __cli__: for__ parsing the command line arguments and it returns a dictionary including the option chosen 
 * __option__: for parsing the data received from the youtube API and returning the quality options available 
