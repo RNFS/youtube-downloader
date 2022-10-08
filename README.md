@@ -21,7 +21,7 @@
   and we have secondary files which are requirements.txt and README.md
 ## project.py 
   this file has the source code of the project, I have implemented in this file only functions 
-  I didn't implemented any classes, and it imports two third-party libraries 
+  I didn't implement any classes, and it imports two third-party libraries 
 * pytube
 * argparse
 - __and two built-in libraries__ 
