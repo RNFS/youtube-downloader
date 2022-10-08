@@ -24,7 +24,7 @@
   I didn't implemented any classes, and it imports two third-party libraries 
 * pytube
 * argparse
-  __and two built-in libraries__ 
+- __and two built-in libraries__ 
 * re
 * import sys
 
